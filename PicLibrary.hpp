@@ -19,15 +19,14 @@ class PicLibrary {
   void loadpicture(string path, string filename);
   void unloadpicture(string filename);
   void savepicture(string filename, string path);
-  void exit();
   void display(string filename);
   
   // picture transformation routines
-  void invert(string key);
-  void grayscale(string key);
-  void rotate(int angle, string key);
-  void flipVH(char plane, string key);
-  void blur(string key);
+  void invert(string filename);
+  void grayscale(string filename);
+  void rotate(int angle, string filename);
+  void flipVH(char plane, string filename);
+  void blur(string filename);
 };
 
 #endif

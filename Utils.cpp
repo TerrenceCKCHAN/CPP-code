@@ -7,7 +7,7 @@ Mat Utils::createimage(int width, int height)
 {   
     Mat img;
     try {
-        cout <<"creating color image" << endl;
+        cout <<"creating colour image" << endl;
         img.create(height, width, CV_8UC3);
     } catch (runtime_error& ex) {
         fprintf(stderr, "Exception creating color image: %s\n", ex.what());
