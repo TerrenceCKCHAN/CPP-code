@@ -3,11 +3,13 @@
 
 #include "Picture.hpp"
 #include "Utils.hpp"
+#include <map>
 
 class PicLibrary {
 
   private:
-  // TODO: define internal picture storage 
+  // TODO: define internal picture storage
+  map<string, Picture> internalPictureStorage;
 
   public:
   // default class constructor/deconstructor
