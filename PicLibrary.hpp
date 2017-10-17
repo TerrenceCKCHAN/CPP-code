@@ -9,7 +9,7 @@ class PicLibrary {
 
   private:
   // TODO: define internal picture storage
-  map<string, Picture> internalPictureStorage;
+  map<string, Picture> internalPicStorage;
 
   public:
   // default class constructor/deconstructor

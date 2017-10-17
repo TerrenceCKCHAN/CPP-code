@@ -1,13 +1,17 @@
 #include "PicLibrary.hpp"
 #include "Colour.hpp"
+#include "Picture.hpp"
+
+
+map<string, Picture> internalPicStorage;
 
 void print_picturestore() {
 
 }
 void loadpicture(string path, string filename) {
-    // To insert into the map -- internalPictureStorage<String, Picture>, filename is the key
-//    internalPictureStorage[filename] = Picture::Picture(path);
-
+    // To insert into the map -- internalPicStorage<String, Picture>, filename is the key
+    Picture pic = Picture(path);
+    internalPicStorage[filename] = pic;
 }
 void unloadpicture(string filename) {
 

@@ -31,7 +31,8 @@ int main(int argc, char ** argv)
     if (argc != 0) {
         for (int i = 1; i < argc; i++) {
             std::cout << "loading..." << argv[i] << std::endl;
-        }
+            PicLibrary::loadpicture(/*add path and string name*/);
+            PicLibrary::display(argv[i]);
     }
     bool loop = true;
     while(loop) {
