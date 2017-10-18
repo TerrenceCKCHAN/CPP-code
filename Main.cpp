@@ -46,6 +46,14 @@ int main(int argc, char ** argv)
     if (argc != 0) {
         for (int i = 1; i < argc; i++) {
             std::cout << "loading..." << argv[i] << std::endl;
+            string token = argv[i];
+            int position = token.find_last_of("/");
+
+            string file_name = token.substr(position + 1);
+            picLib->loadpicture("." + token, file_name);
+
+//            int found = "images/imgage.jpg".find_last_of("/");
+//            std::string = "asdfjlk".substr(found + 1);
 //            PicLibrary::loadpicture(/*add path and string name*/);
 //            PicLibrary::display(argv[i]);
         }
@@ -54,11 +62,11 @@ int main(int argc, char ** argv)
     while(loop) {
         std::string line;
         std::getline(cin, line);
-        std::vector<std::string> tokens = splitLine(line);
+        std::vector <std::string> tokens = splitLine(line);
 
 
         if (tokens[0] == "liststore") {
-            vector<string> keys;
+            vector <string> keys;
             for (auto elem : picLib->getInternalPicStorage()) {
                 std::cout << elem.first << std::endl;
             }
@@ -77,98 +85,94 @@ int main(int argc, char ** argv)
 
         if (tokens[0] == "unload") {
             string file_name = tokens[1];
-            map<string, string> aMap = {{"yo", "a"}, {"buddy", "a"}, {"get", "d"}, {"wrecked", "e"}};
 
-            if (aMap.find(file_name) == aMap.end()) {
+            if (!picLib->getInternalPicStorage().count(file_name)) {
                 cout << "Error" << endl;
             } else {
                 cout << "This is okay" << endl;
+                picLib->unloadpicture(file_name);
             }
         }
 
         if (tokens[0] == "save") {
             string file_name = tokens[1];
             string file_path = tokens[2];
-            map<string, string> aMap = {{"yo", "a"}, {"buddy", "a"}, {"get", "d"}, {"wrecked", "e"}};
 
-            if (aMap.find(file_name) == aMap.end()) {
+            if (!picLib->getInternalPicStorage().count(file_name)) {
                 //Output error message when the filename does not exist in the picture library's internal picture store
                 cout << "Error" << endl;
             } else {
-                cout << "This is okay" << endl;
+                picLib->savepicture(file_name, file_path);
             }
         }
 
         if (tokens[0] == "display") {
             string file_name = tokens[1];
-            map<string, string> aMap = {{"yo", "a"}, {"buddy", "a"}, {"get", "d"}, {"wrecked", "e"}};
-
-            if (aMap.find(file_name) == aMap.end()) {
+            if (!picLib->getInternalPicStorage().count(file_name)) {
                 //Output error message when the filename does not exist in the picture library's internal picture store
                 cout << "Error" << endl;
             } else {
-                cout << "This is okay" << endl;
+                picLib->display(file_name);
+//                if (GetKeyState('A') & 0x8000) {
+//                    return EXIT_SUCCESS;
+//                }
             }
         }
+
         if (tokens[0] == "invert") {
             string file_name = tokens[1];
-            map<string, string> aMap = {{"yo", "a"}, {"buddy", "a"}, {"get", "d"}, {"wrecked", "e"}};
 
-            if (aMap.find(file_name) == aMap.end()) {
+            if (!picLib->getInternalPicStorage().count(file_name)) {
                 //Output error message when the filename does not exist in the picture library's internal picture store
                 cout << "Error" << endl;
             } else {
-                cout << "This is okay" << endl;
+                picLib->invert(file_name);
             }
         }
         if (tokens[0] == "grayscale") {
             string file_name = tokens[1];
-            map<string, string> aMap = {{"yo", "a"}, {"buddy", "a"}, {"get", "d"}, {"wrecked", "e"}};
 
-            if (aMap.find(file_name) == aMap.end()) {
+
+            if (!picLib->getInternalPicStorage().count(file_name)) {
                 //Output error message when the filename does not exist in the picture library's internal picture store
                 cout << "Error" << endl;
             } else {
-                cout << "This is okay" << endl;
+                picLib->grayscale(file_name);
             }
         }
         if (tokens[0] == "rotate") {
-            // to add ways to parse tokens[1] to get degrees [90|180|270]
+            string angle = tokens[1];
             string file_name = tokens[2];
-            map<string, string> aMap = {{"yo", "a"}, {"buddy", "a"}, {"get", "d"}, {"wrecked", "e"}};
 
-            if (aMap.find(file_name) == aMap.end()) {
+            if (!picLib->getInternalPicStorage().count(file_name)) {
                 //Output error message when the filename does not exist in the picture library's internal picture store
                 cout << "Error" << endl;
             } else {
-                cout << "This is okay" << endl;
+                picLib->rotate(angle, file_name);
             }
         }
         if (tokens[0] == "flip") {
-            // add [H|V] tokens[1]
+            string plane = tokens[1];
             string file_name = tokens[2];
-            map<string, string> aMap = {{"yo", "a"}, {"buddy", "a"}, {"get", "d"}, {"wrecked", "e"}};
 
-            if (aMap.find(file_name) == aMap.end()) {
+            if (!picLib->getInternalPicStorage().count(file_name)) {
                 //Output error message when the filename does not exist in the picture library's internal picture store
                 cout << "Error" << endl;
             } else {
-                cout << "This is okay" << endl;
+                picLib->flipVH(plane, file_name);
             }
         }
 
         if (tokens[0] == "blur") {
             string file_name = tokens[1];
-            map<string, string> aMap = {{"yo", "a"}, {"buddy", "a"}, {"get", "d"}, {"wrecked", "e"}};
 
-            if (aMap.find(file_name) == aMap.end()) {
+            if (!picLib->getInternalPicStorage().count(file_name)) {
                 //Output error message when the filename does not exist in the picture library's internal picture store
                 cout << "Error" << endl;
             } else {
-                cout << "This is okay" << endl;
+                picLib->blur(file_name);
             }
         }
-
 
 
         if (line == "exit") {
@@ -177,73 +181,6 @@ int main(int argc, char ** argv)
             //free all resources used by the program
             //terminate with a successful exit code of 0
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-//To print sth for testing
-//        cout <<  << endl;
-
-
-
-//        for (int i = 0; i < tokens.size(); i++) {
-//            std::cout << tokens[i] << std::endl;
-//        }
-//        std::cout << tokens[0] << std::endl;
-
-
-
-
-//        std::string token;
-//        std::vector<std::string> tokens;
-//        std::stringstream ss(cin);
-//        while (std::getline(cin, token, ' ')) {
-//            tokens.push_back(token);
-//        }
-//        std::cout << tokens[0] << std::endl;
-//
-//        std::cout << tokens << std::endl;
-
-
-
-
-
-
-//        cout << "This is the prompt" << endl;
-//        cin >> cmd;
-
-//        using namespace std;
-//        string sentence = "And I feel fine...";
-//        istringstream iss(sentence);
-//        copy(istream_iterator<string>(iss),
-//             istream_iterator<string>(),
-//             ostream_iterator<string>(cout, "\n"));
-//
-//        cout << cmd << endl;
-//        if (cmd == "liststore") {
-//            cout << cmd << endl;
-//        } else if (cmd == "load") {
-//            cout << cmd << endl;
-//        } else if (cmd == "liststore") {
-//            cout << cmd << endl;
-//        } else if (cmd == "liststore") {
-//            cout << cmd << endl;
-//        } else if (cmd == "liststore") {
-//            cout << cmd << endl;
-//        } else if (cmd == "liststore") {
-//            cout << cmd << endl;
-//        } else if (cmd == "liststore") {
-//            cout << cmd << endl;
-//        }
     }
 
 

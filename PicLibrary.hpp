@@ -30,8 +30,8 @@ class PicLibrary {
   // picture transformation routines
   void invert(string filename);
   void grayscale(string filename);
-  void rotate(int angle, string filename);
-  void flipVH(char plane, string filename);
+  void rotate(string angle, string filename);
+  void flipVH(string plane, string filename);
   void blur(string filename);
 };
 
