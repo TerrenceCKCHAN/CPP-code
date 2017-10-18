@@ -3,28 +3,37 @@
 #include "Picture.hpp"
 
 
-map<string, Picture> internalPicStorage;
+
+
+
+
+
+
+map<string, Picture> PicLibrary::getInternalPicStorage() {
+    return this->internalPicStorage;
+};
 
 void print_picturestore() {
 
 }
-void loadpicture(string path, string filename) {
+void PicLibrary::loadpicture(string path, string filename) {
+
     // To insert into the map -- internalPicStorage<String, Picture>, filename is the key
     Picture pic = Picture(path);
-    internalPicStorage[filename] = pic;
+    this->internalPicStorage[filename] = pic;
 }
-void unloadpicture(string filename) {
+void PicLibrary::unloadpicture(string filename) {
 
 }
-void savepicture(string filename, string path) {
+void PicLibrary::savepicture(string filename, string path) {
 
 }
-void display(string filename) {
+void PicLibrary::display(string filename) {
 
 }
 
 // picture transformation routines
-void invert(string filename) {
+void PicLibrary::invert(string filename) {
 //    Picture pic = internalPictureStorage.find(filename);
 //    for (int x = 0; x < width; x++) {
 //        for (int y = 0; y < height; y++) {
@@ -36,7 +45,7 @@ void invert(string filename) {
 //            pic.setPixel(x, y, newPixelColour);
 }
 
-void grayscale(string filename) {
+void PicLibrary::grayscale(string filename) {
 //    Picture pic = internalPictureStorage.find(filename);
 //    int width = pic.getWidth();
 //    int height = pic.getHeight();
@@ -51,7 +60,7 @@ void grayscale(string filename) {
 //    }
 }
 
-void rotate(int angle, string filename) {
+void PicLibrary::rotate(int angle, string filename) {
 //    int width = pic.getWidth();
 //    int height = pic.getHeight();
 //    switch (angle) {
@@ -88,7 +97,7 @@ void rotate(int angle, string filename) {
 //}
 
 }
-void flipVH(char plane, string filename) {
+void PicLibrary::flipVH(char plane, string filename) {
 //    int width = pic.getWidth();
 //    int height = pic.getHeight();
 //    Picture newPic = Utils.createPicture(width, height);
@@ -107,7 +116,7 @@ void flipVH(char plane, string filename) {
 //        }
 //    } pic = newPic;
 }
-void blur(string filename) {
+void PicLibrary::blur(string filename) {
 //    int width  = pic.getWidth();
 //    int height = pic.getHeight();
 //    Picture newPic = Utils.createPicture(width, height);

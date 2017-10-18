@@ -16,6 +16,10 @@ class PicLibrary {
   PicLibrary(){};
   ~PicLibrary();
 
+
+  //getter
+  map<string, Picture> getInternalPicStorage();
+
   // command-line interpreter routines
   void print_picturestore();
   void loadpicture(string path, string filename);
