@@ -57,10 +57,14 @@ int main(int argc, char ** argv)
 //            PicLibrary::display(argv[i]);
         }
     }
-    bool loop = true;
-    while(loop) {
-        std::string line;
-        std::getline(cin, line);
+    //bool loop = true;
+    std::string line;
+    while(std::getline(cin, line)) {
+//        std::string line;
+//        std::getline(cin, line);
+        if (line == "") {
+            continue;
+        }
         std::vector <std::string> tokens = splitLine(line);
 
 
@@ -175,7 +179,8 @@ int main(int argc, char ** argv)
 
 
         if (line == "exit") {
-            loop = false;
+            //loop = false;
+            break;
             //wait for any outstanding worker threads to complete
             //free all resources used by the program
             //terminate with a successful exit code of 0
