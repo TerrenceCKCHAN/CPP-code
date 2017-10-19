@@ -45,12 +45,11 @@ int main(int argc, char ** argv)
     //to store all arguments first
     if (argc != 0) {
         for (int i = 1; i < argc; i++) {
-            std::cout << "loading..." << argv[i] << std::endl;
             string token = argv[i];
             int position = token.find_last_of("/");
 
             string file_name = token.substr(position + 1);
-            picLib->loadpicture("." + token, file_name);
+            picLib->loadpicture(token, file_name);
 
 //            int found = "images/imgage.jpg".find_last_of("/");
 //            std::string = "asdfjlk".substr(found + 1);
@@ -79,7 +78,7 @@ int main(int argc, char ** argv)
             if ((getFileExt(file_path) != "jpg") || picLib->getInternalPicStorage().count(file_name)) {
                 cout << "Error" << endl;
             } else {
-                picLib->loadpicture("." + file_path, file_name);
+                picLib->loadpicture(file_path, file_name);
             }
         }
 
