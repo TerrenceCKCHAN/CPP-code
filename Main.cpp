@@ -51,17 +51,13 @@ int main(int argc, char ** argv)
             string file_name = token.substr(position + 1);
             picLib->loadpicture(token, file_name);
 
-//            int found = "images/imgage.jpg".find_last_of("/");
-//            std::string = "asdfjlk".substr(found + 1);
-//            PicLibrary::loadpicture(/*add path and string name*/);
-//            PicLibrary::display(argv[i]);
+
         }
     }
-    //bool loop = true;
+
     std::string line;
     while(std::getline(cin, line)) {
-//        std::string line;
-//        std::getline(cin, line);
+
         if (line == "") {
             continue;
         }
@@ -114,12 +110,9 @@ int main(int argc, char ** argv)
             if (!picLib->getInternalPicStorage().count(file_name)) {
                 //Output error message when the filename does not exist in the picture library's internal picture store
                 cout << "Error" << endl;
-            } else {
-                picLib->display(file_name);
-//                if (GetKeyState('A') & 0x8000) {
-//                    return EXIT_SUCCESS;
-//                }
             }
+            picLib->display(file_name);
+
         }
 
         if (tokens[0] == "invert") {
@@ -174,12 +167,13 @@ int main(int argc, char ** argv)
                 cout << "Error" << endl;
             } else {
                 picLib->blur(file_name);
+
             }
         }
 
 
         if (line == "exit") {
-            //loop = false;
+
             break;
             //wait for any outstanding worker threads to complete
             //free all resources used by the program
@@ -187,10 +181,6 @@ int main(int argc, char ** argv)
         }
     }
 
-
-  cout << "------------------------------------------------------" << endl; 
-  cout << "TODO: Implement the C++ Picture Processing Interpreter" << endl;
-  cout << "------------------------------------------------------" << endl;
 
   // write main IO loop that runs the command-line interpreter interactive shell
 
