@@ -112,8 +112,7 @@ int main(int argc, char **argv) {
                 std::cout << elem.first << std::endl;
             }
             picLib->unlockMutex();
-        }
-        if (tokens[0] == "load") {
+        } else if (tokens[0] == "load") {
             string file_path = tokens[1];
             string file_name = tokens[2];
 
@@ -125,8 +124,7 @@ int main(int argc, char **argv) {
                 queueManager[file_name] = myQueue;
                 threadManager[file_name] = std::thread(worker, myQueue, picLib);
             }
-        }
-        if (tokens[0] == "unload") {
+        } else if (tokens[0] == "unload") {
             string file_name = tokens[1];
             if (!picLib->getInternalPicStorage().count(file_name)) {
                 //Output error message when the filename does not exist in the picture library's internal picture store
@@ -134,22 +132,20 @@ int main(int argc, char **argv) {
             } else {
                 while (queueManager[file_name]->size() > 0) {};
                 threadManager[file_name].detach();
+                delete queueManager[file_name];
                 queueManager.erase(file_name);
                 threadManager.erase(file_name);
                 picLib->unloadpicture(file_name);
-            }
-        }
 
-        if (tokens[0] == "blur") {
+            }
+        } else if (tokens[0] == "blur") {
             string file_name = tokens[1];
             if (!picLib->getInternalPicStorage().count(file_name)) {
                 cout << "Filename does not exist" << endl;
             } else {
                 queueManager[file_name]->push(tokens);
             }
-        }
-
-        if (tokens[0] == "save") {
+        } else if (tokens[0] == "save") {
             string file_name = tokens[1];
             string file_path = tokens[2];
 
@@ -158,8 +154,7 @@ int main(int argc, char **argv) {
             } else {
                 queueManager[file_name]->push(tokens);
             }
-        }
-        if (tokens[0] == "display") {
+        } else if (tokens[0] == "display") {
             string file_name = tokens[1];
             if (!picLib->getInternalPicStorage().count(file_name)) {
                 cout << "Filename does not exist" << endl;
@@ -167,8 +162,7 @@ int main(int argc, char **argv) {
                 queueManager[file_name]->push(tokens);
             }
 
-        }
-        if (tokens[0] == "invert") {
+        } else if (tokens[0] == "invert") {
             string file_name = tokens[1];
 
             if (!picLib->getInternalPicStorage().count(file_name)) {
@@ -176,16 +170,14 @@ int main(int argc, char **argv) {
             } else {
                 queueManager[file_name]->push(tokens);
             }
-        }
-        if (tokens[0] == "grayscale") {
+        } else if (tokens[0] == "grayscale") {
             string file_name = tokens[1];
             if (!picLib->getInternalPicStorage().count(file_name)) {
                 cout << "Filename does not exist" << endl;
             } else {
                 queueManager[file_name]->push(tokens);
             }
-        }
-        if (tokens[0] == "rotate") {
+        } else if (tokens[0] == "rotate") {
             string angle = tokens[1];
             string file_name = tokens[2];
             if (!picLib->getInternalPicStorage().count(file_name)) {
@@ -193,8 +185,7 @@ int main(int argc, char **argv) {
             } else {
                 queueManager[file_name]->push(tokens);
             }
-        }
-        if (tokens[0] == "flip") {
+        } else if (tokens[0] == "flip") {
             string plane = tokens[1];
             string file_name = tokens[2];
             if (!picLib->getInternalPicStorage().count(file_name)) {
@@ -202,9 +193,7 @@ int main(int argc, char **argv) {
             } else {
                 queueManager[file_name]->push(tokens);
             }
-        }
-
-        if (line == "exit") {
+        } else if (line == "exit") {
             break;
             //wait for any outstanding worker threads to complete
             //free all resources used by the program
@@ -215,6 +204,10 @@ int main(int argc, char **argv) {
         while (queueManager[item.first]->size() > 0) {};
         item.second.detach();
     }
+    for (auto &item : queueManager) {
+        delete item.second;
+    }
+
     return 0;
 }
 

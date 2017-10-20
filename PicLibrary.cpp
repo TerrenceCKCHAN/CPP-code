@@ -276,107 +276,107 @@ void PicLibrary::blur(string filename) {
     int width = pic.getwidth();
     int height = pic.getheight();
     Picture newPic = Picture(width, height);
-//    using namespace std::chrono;
+    using namespace std::chrono;
 //    high_resolution_clock::time_point t1 = high_resolution_clock::now();
 
-//original blur
-    for (int x = 0; x < width; x++) {
-        for (int y = 0; y < height; y++) {
-            if (x == 0 || x == width - 1 || y == 0 || y == height - 1) {
-                newPic.setpixel(x, y, pic.getpixel(x, y));
-            } else {
-                int red = 0;
-                int green = 0;
-                int blue = 0;
-                for (int i = x - 1; i < x + 2; i++) {
-                    for (int j = y - 1; j < y + 2; j++) {
-                        Colour currentPix = pic.getpixel(i, j);
-                        blue = blue + currentPix.getblue();
-                        green = green + currentPix.getgreen();
-                        red = red + currentPix.getred();
-                    }
-                }
-                Colour newColour = Colour(red / 9, green / 9, blue / 9);
-                newPic.setpixel(x, y, newColour);
-            }
-        }
-    }
-
-//    high_resolution_clock::time_point tq = high_resolution_clock::now();
-//    for (int i = 0; i < 10; i++) {
-//
-//    //original blur
-//        for (int x = 0; x < width; x++) {
-//            for (int y = 0; y < height; y++) {
-//                if (x == 0 || x == width - 1 || y == 0 || y == height - 1) {
-//                    newPic.setpixel(x, y, pic.getpixel(x, y));
-//                } else {
-//                    int red = 0;
-//                    int green = 0;
-//                    int blue = 0;
-//                    for (int i = x - 1; i < x + 2; i++) {
-//                        for (int j = y - 1; j < y + 2; j++) {
-//                            Colour currentPix = pic.getpixel(i, j);
-//                            blue = blue + currentPix.getblue();
-//                            green = green + currentPix.getgreen();
-//                            red = red + currentPix.getred();
-//                        }
+////original blur
+//    for (int x = 0; x < width; x++) {
+//        for (int y = 0; y < height; y++) {
+//            if (x == 0 || x == width - 1 || y == 0 || y == height - 1) {
+//                newPic.setpixel(x, y, pic.getpixel(x, y));
+//            } else {
+//                int red = 0;
+//                int green = 0;
+//                int blue = 0;
+//                for (int i = x - 1; i < x + 2; i++) {
+//                    for (int j = y - 1; j < y + 2; j++) {
+//                        Colour currentPix = pic.getpixel(i, j);
+//                        blue = blue + currentPix.getblue();
+//                        green = green + currentPix.getgreen();
+//                        red = red + currentPix.getred();
 //                    }
-//                    Colour newColour = Colour(red / 9, green / 9, blue / 9);
-//                    newPic.setpixel(x, y, newColour);
 //                }
+//                Colour newColour = Colour(red / 9, green / 9, blue / 9);
+//                newPic.setpixel(x, y, newColour);
 //            }
 //        }
 //    }
-//    high_resolution_clock::time_point tw = high_resolution_clock::now();
-//    int duration = duration_cast<milliseconds>(tw - tq).count();
-//    std::cout << "original blur method takes " << duration << " milliseconds." << std::endl;
-//
-//    high_resolution_clock::time_point tr = high_resolution_clock::now();
-//    for (int i = 0; i < 10; i++) {
-//
-//        newPic = rowBlur(pic, newPic, width, height);
-//
-//    }
-//    high_resolution_clock::time_point te = high_resolution_clock::now();
-//    int duration = duration_cast<milliseconds>(te - tr).count();
-//    std::cout << "row blur method takes " << duration << " milliseconds." << std::endl;
-//    high_resolution_clock::time_point ts = high_resolution_clock::now();
-//    for (int i = 0; i < 10; i++) {
-//
-//        newPic = colBlur(pic, newPic, width, height);
-//
-//    }
-//    high_resolution_clock::time_point ta = high_resolution_clock::now();
-//    int duration = duration_cast<milliseconds>(ta - ts).count();
-//    std::cout << "column blur method takes " << duration << " milliseconds." << std::endl;
-//    high_resolution_clock::time_point tf = high_resolution_clock::now();
-//    for (int i = 0; i < 10; i++) {
-//
-//        newPic = sectorsBlur(pic, newPic, width, height, 2);
-//
-//    }
-//    high_resolution_clock::time_point td = high_resolution_clock::now();
-//    int duration = duration_cast<milliseconds>(td - tf).count();
-//    std::cout << "4 sectors blur method takes " << duration << " milliseconds." << std::endl;
-//    high_resolution_clock::time_point tx = high_resolution_clock::now();
-//    for (int i = 0; i < 10; i++) {
-//
-//        newPic = sectorsBlur(pic, newPic, width, height, 4);
-//
-//    }
-//    high_resolution_clock::time_point tz= high_resolution_clock::now();
-//    int duration = duration_cast<milliseconds>(tz - tx).count();
-//    std::cout << "16 sectors blur method takes " << duration << " milliseconds." << std::endl;
-//    high_resolution_clock::time_point tv = high_resolution_clock::now();
-//    for (int i = 0; i < 10; i++) {
-//
-//        newPic = pixelBlur(pic, newPic, width, height);
-//
-//    }
-//    high_resolution_clock::time_point tc = high_resolution_clock::now();
-//    int duration = duration_cast<milliseconds>(tc - tv).count();
-//    std::cout << "pixel blur method takes " << duration << " milliseconds." << std::endl;
+
+    high_resolution_clock::time_point tq = high_resolution_clock::now();
+    for (int i = 0; i < 10; i++) {
+
+    //original blur
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                if (x == 0 || x == width - 1 || y == 0 || y == height - 1) {
+                    newPic.setpixel(x, y, pic.getpixel(x, y));
+                } else {
+                    int red = 0;
+                    int green = 0;
+                    int blue = 0;
+                    for (int i = x - 1; i < x + 2; i++) {
+                        for (int j = y - 1; j < y + 2; j++) {
+                            Colour currentPix = pic.getpixel(i, j);
+                            blue = blue + currentPix.getblue();
+                            green = green + currentPix.getgreen();
+                            red = red + currentPix.getred();
+                        }
+                    }
+                    Colour newColour = Colour(red / 9, green / 9, blue / 9);
+                    newPic.setpixel(x, y, newColour);
+                }
+            }
+        }
+    }
+    high_resolution_clock::time_point tw = high_resolution_clock::now();
+    int duration = duration_cast<milliseconds>(tw - tq).count();
+    std::cout << "original blur method takes " << duration << " milliseconds." << std::endl;
+
+    high_resolution_clock::time_point tr = high_resolution_clock::now();
+    for (int i = 0; i < 10; i++) {
+
+        newPic = rowBlur(pic, newPic, width, height);
+
+    }
+    high_resolution_clock::time_point te = high_resolution_clock::now();
+    duration = duration_cast<milliseconds>(te - tr).count();
+    std::cout << "row blur method takes " << duration << " milliseconds." << std::endl;
+    high_resolution_clock::time_point ts = high_resolution_clock::now();
+    for (int i = 0; i < 10; i++) {
+
+        newPic = colBlur(pic, newPic, width, height);
+
+    }
+    high_resolution_clock::time_point ta = high_resolution_clock::now();
+    duration = duration_cast<milliseconds>(ta - ts).count();
+    std::cout << "column blur method takes " << duration << " milliseconds." << std::endl;
+    high_resolution_clock::time_point tf = high_resolution_clock::now();
+    for (int i = 0; i < 10; i++) {
+
+        newPic = sectorsBlur(pic, newPic, width, height, 2);
+
+    }
+    high_resolution_clock::time_point td = high_resolution_clock::now();
+    duration = duration_cast<milliseconds>(td - tf).count();
+    std::cout << "4 sectors blur method takes " << duration << " milliseconds." << std::endl;
+    high_resolution_clock::time_point tx = high_resolution_clock::now();
+    for (int i = 0; i < 10; i++) {
+
+        newPic = sectorsBlur(pic, newPic, width, height, 4);
+
+    }
+    high_resolution_clock::time_point tz= high_resolution_clock::now();
+    duration = duration_cast<milliseconds>(tz - tx).count();
+    std::cout << "16 sectors blur method takes " << duration << " milliseconds." << std::endl;
+    high_resolution_clock::time_point tv = high_resolution_clock::now();
+    for (int i = 0; i < 10; i++) {
+
+        newPic = pixelBlur(pic, newPic, width, height);
+
+    }
+    high_resolution_clock::time_point tc = high_resolution_clock::now();
+    duration = duration_cast<milliseconds>(tc - tv).count();
+    std::cout << "pixel blur method takes " << duration << " milliseconds." << std::endl;
 
 
 
