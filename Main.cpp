@@ -211,6 +211,7 @@ int main(int argc, char **argv) {
 }
 
 
+
 ////sequential code
 //int main(int argc, char **argv) {
 //    PicLibrary *picLib = new PicLibrary();
