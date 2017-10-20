@@ -300,6 +300,11 @@ void PicLibrary::blur(string filename) {
             }
         }
     }
+//    high_resolution_clock::time_point t2 = high_resolution_clock::now();
+//    int duration = duration_cast<milliseconds>(t2 - t1).count();
+//    std::cout << "This blur method takes " << duration << " milliseconds." << std::endl;
+
+
 // An overview of method call for blur optimisation
 /*
     newPic = rowBlur(pic, newPic, width, height);
@@ -460,9 +465,8 @@ void PicLibrary::blur(string filename) {
     duration = duration_cast<milliseconds>(tc - tv).count();
     std::cout << "pixel blur method takes " << duration << " milliseconds." << std::endl;
 */
-//    high_resolution_clock::time_point t2 = high_resolution_clock::now();
-//    int duration = duration_cast<milliseconds>(t2 - t1).count();
-//    std::cout << "This blur method takes " << duration << " milliseconds." << std::endl;
+
+
     this->internalPicStorage[filename] = newPic;
 }
 
