@@ -203,6 +203,10 @@ int main(int argc, char **argv) {
         while (queueManager[item.first]->size() > 0) {};
         item.second.detach();
     }
+    for (auto &item : queueManager) {
+        delete item.second;
+    }
+
     return 0;
 }
 
