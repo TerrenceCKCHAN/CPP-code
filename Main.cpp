@@ -132,6 +132,7 @@ int main(int argc, char **argv) {
                 cout << "Filename does not exist" << endl;
             } else {
                 while (queueManager[file_name]->size() > 0) {};
+                threadManager[file_name].detach();
                 queueManager.erase(file_name);
                 threadManager.erase(file_name);
                 picLib->unloadpicture(file_name);

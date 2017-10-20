@@ -261,55 +261,55 @@ void PicLibrary::blur(string filename) {
     using namespace std::chrono;
     high_resolution_clock::time_point t1 = high_resolution_clock::now();
 
-////original blur
-//    for (int x = 0; x < width; x++) {
-//        for (int y = 0; y < height; y++) {
-//            if (x == 0 || x == width - 1 || y == 0 || y == height - 1) {
-//                newPic.setpixel(x, y, pic.getpixel(x, y));
-//            } else {
-//                int red = 0;
-//                int green = 0;
-//                int blue = 0;
-//                for (int i = x - 1; i < x + 2; i++) {
-//                    for (int j = y - 1; j < y + 2; j++) {
-//                        Colour currentPix = pic.getpixel(i, j);
-//                        blue = blue + currentPix.getblue();
-//                        green = green + currentPix.getgreen();
-//                        red = red + currentPix.getred();
-//                    }
-//                }
-//                Colour newColour = Colour(red / 9, green / 9, blue / 9);
-//                newPic.setpixel(x, y, newColour);
-//            }
-//        }
-//    }
-
-    high_resolution_clock::time_point tq = high_resolution_clock::now();
-    for (int i = 0; i < 10; i++) {
-
-    //original blur
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                if (x == 0 || x == width - 1 || y == 0 || y == height - 1) {
-                    newPic.setpixel(x, y, pic.getpixel(x, y));
-                } else {
-                    int red = 0;
-                    int green = 0;
-                    int blue = 0;
-                    for (int i = x - 1; i < x + 2; i++) {
-                        for (int j = y - 1; j < y + 2; j++) {
-                            Colour currentPix = pic.getpixel(i, j);
-                            blue = blue + currentPix.getblue();
-                            green = green + currentPix.getgreen();
-                            red = red + currentPix.getred();
-                        }
+//original blur
+    for (int x = 0; x < width; x++) {
+        for (int y = 0; y < height; y++) {
+            if (x == 0 || x == width - 1 || y == 0 || y == height - 1) {
+                newPic.setpixel(x, y, pic.getpixel(x, y));
+            } else {
+                int red = 0;
+                int green = 0;
+                int blue = 0;
+                for (int i = x - 1; i < x + 2; i++) {
+                    for (int j = y - 1; j < y + 2; j++) {
+                        Colour currentPix = pic.getpixel(i, j);
+                        blue = blue + currentPix.getblue();
+                        green = green + currentPix.getgreen();
+                        red = red + currentPix.getred();
                     }
-                    Colour newColour = Colour(red / 9, green / 9, blue / 9);
-                    newPic.setpixel(x, y, newColour);
                 }
+                Colour newColour = Colour(red / 9, green / 9, blue / 9);
+                newPic.setpixel(x, y, newColour);
             }
         }
     }
+
+//    high_resolution_clock::time_point tq = high_resolution_clock::now();
+//    for (int i = 0; i < 10; i++) {
+//
+//    //original blur
+//        for (int x = 0; x < width; x++) {
+//            for (int y = 0; y < height; y++) {
+//                if (x == 0 || x == width - 1 || y == 0 || y == height - 1) {
+//                    newPic.setpixel(x, y, pic.getpixel(x, y));
+//                } else {
+//                    int red = 0;
+//                    int green = 0;
+//                    int blue = 0;
+//                    for (int i = x - 1; i < x + 2; i++) {
+//                        for (int j = y - 1; j < y + 2; j++) {
+//                            Colour currentPix = pic.getpixel(i, j);
+//                            blue = blue + currentPix.getblue();
+//                            green = green + currentPix.getgreen();
+//                            red = red + currentPix.getred();
+//                        }
+//                    }
+//                    Colour newColour = Colour(red / 9, green / 9, blue / 9);
+//                    newPic.setpixel(x, y, newColour);
+//                }
+//            }
+//        }
+//    }
 //    high_resolution_clock::time_point tw = high_resolution_clock::now();
 //    int duration = duration_cast<milliseconds>(tw - tq).count();
 //    std::cout << "original blur method takes " << duration << " milliseconds." << std::endl;
