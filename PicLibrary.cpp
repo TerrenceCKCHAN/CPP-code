@@ -3,42 +3,39 @@
 #include "Picture.hpp"
 #include <thread>
 
-
-
-
-
-
-
-
 map<string, Picture> PicLibrary::getInternalPicStorage() {
     return this->internalPicStorage;
 };
-
-void print_picturestore() {
-
+void PicLibrary::lockMutex() {
+    this->mtx.lock();
+}
+void PicLibrary::unlockMutex() {
+    this->mtx.unlock();
 }
 void PicLibrary::loadpicture(string path, string filename) {
-
+    lockMutex();
     // To insert into the map -- internalPicStorage<String, Picture>, filename is the key
     Picture pic = Picture(path);
     this->internalPicStorage[filename] = pic;
+    unlockMutex();
 }
 void PicLibrary::unloadpicture(string filename) {
+    lockMutex();
     this->internalPicStorage.erase(filename);
+    unlockMutex();
 }
 void PicLibrary::savepicture(string filename, string path) {
+    lockMutex();
     Picture pic = this->internalPicStorage[filename];
     Utils utils = Utils();
     utils.saveimage(pic.getimage(), path);
-
-
+    unlockMutex();
 }
 void PicLibrary::display(string filename) {
     Picture pic = this->internalPicStorage[filename];
     Utils utils = Utils();
     utils.displayimage(pic.getimage());
 }
-
 // picture transformation routines
 void PicLibrary::invert(string filename) {
     Picture pic = this->internalPicStorage[filename];
@@ -53,7 +50,6 @@ void PicLibrary::invert(string filename) {
         }
     }
 }
-
 void PicLibrary::grayscale(string filename) {
     Picture pic = this->internalPicStorage[filename];
     int width = pic.getwidth();
@@ -68,7 +64,6 @@ void PicLibrary::grayscale(string filename) {
 
     }
 }
-
 void PicLibrary::rotate(string angle, string filename) {
     Picture pic = this->internalPicStorage[filename];
     int width = pic.getwidth();
@@ -102,8 +97,6 @@ void PicLibrary::rotate(string angle, string filename) {
         this->internalPicStorage[filename] = newPic;
     }
 }
-
-
 void PicLibrary::flipVH(string plane, string filename) {
     Picture pic = this->internalPicStorage[filename];
     int width = pic.getwidth();
@@ -121,9 +114,8 @@ void PicLibrary::flipVH(string plane, string filename) {
     }
     this->internalPicStorage[filename] = newPic;
 }
-
 void rowThread(Picture pic, Picture* newPic, int width, int height, int y) {
-    for (int x = 0; x < width; ++x) {
+    for (int x = 0; x < width; x++) {
         if (x == 0 || x == width - 1 || y == 0 || y == height - 1) {
             newPic->setpixel(x, y, pic.getpixel(x, y));
         } else {
@@ -143,9 +135,8 @@ void rowThread(Picture pic, Picture* newPic, int width, int height, int y) {
         }
     }
 }
-
 void colThread(Picture pic, Picture* newPic, int width, int height, int x) {
-    for (int y = 0; y < height; ++y) {
+    for (int y = 0; y < height; y++) {
         if (x == 0 || x == width - 1 || y == 0 || y == height - 1) {
             newPic->setpixel(x, y, pic.getpixel(x, y));
         } else {
@@ -165,56 +156,9 @@ void colThread(Picture pic, Picture* newPic, int width, int height, int x) {
         }
     }
 }
-
-void fourSectorsThread(Picture pic, Picture* newPic, int width, int height, int x, int y) {
-    for (int y = 0; y < height / 2; ++y) {
-        if (x == 0 || x == width - 1 || y == 0 || y == height - 1) {
-            newPic->setpixel(x, y, pic.getpixel(x, y));
-        } else {
-            int red = 0;
-            int green = 0;
-            int blue = 0;
-            for (int i = x - 1; i < x + 2; i++) {
-                for (int j = y - 1; j < y + 2; j++) {
-                    Colour currentPix = pic.getpixel(i, j);
-                    blue = blue + currentPix.getblue();
-                    green = green + currentPix.getgreen();
-                    red = red + currentPix.getred();
-                }
-            }
-            Colour newColour = Colour(red / 9, green / 9, blue / 9);
-            newPic->setpixel(x, y, newColour);
-        }
-    }
-}
-
-
-
-Picture rowBlur(Picture originalPic, Picture newPic, int width, int height) {
-    std::thread workers[height];
-    for (int y = 0; y < height; ++y) {
-        workers[y] = std::thread(rowThread, originalPic, &newPic, width, height, y);
-    }
-    for (int y = 0; y < height; ++y) {
-        workers[y].join();
-    }
-    return newPic;
-}
-
-Picture colBlur(Picture originalPic, Picture newPic, int width, int height) {
-    std::thread workers[width];
-    for (int x = 0; x < width; ++x) {
-        workers[x] = std::thread(colThread, originalPic, &newPic, width, height, x);
-    }
-    for (int x = 0; x < width; ++x) {
-        workers[x].join();
-    }
-    return newPic;
-}
-
 void sectorThread(Picture pic, Picture* newPic, int width, int height, int a, int b, int sector) {
-    for (int x = a; x < a + width/sector; ++x) {
-        for (int y = b; y < b + height/sector; ++y) {
+    for (int x = a; x < a + width/sector; x++) {
+        for (int y = b; y < b + height/sector; y++) {
             if (x == 0 || x == width - 1 || y == 0 || y == height - 1) {
                 newPic->setpixel(x, y, pic.getpixel(x, y));
             } else {
@@ -235,32 +179,6 @@ void sectorThread(Picture pic, Picture* newPic, int width, int height, int a, in
         }
     }
 }
-
-Picture sectorsBlur(Picture originalPic, Picture newPic, int width, int height, int sector) {
-/*    for (int x = 0; x < 4; ++x) {
-        workers[x] = std::thread(fourSectorsThread, originalPic, &newPic, width, height, x);
-    }
-    for (int x = 0; x < 4; ++x) {
-        workers[x].join();
-    }*/
-    std::thread workers[sector*sector];
-    int counter = 0;
-    for (int x = 0; x < width; x += width/sector) {
-        for (int y = 0; y < height; y += height/sector) {
-            workers[counter] = std::thread(sectorThread, originalPic, &newPic, width, height, x, y, sector);
-            counter++;
-        }
-
-    }
-    for (int i = 0; i < counter; ++i) {
-        workers[i].join();
-    }
-    return newPic;
-}
-
-
-
-
 void pixelThread(Picture pic, Picture* newPic, int width, int height, int x, int y) {
     if (x == 0 || x == width - 1 || y == 0 || y == height - 1) {
         newPic->setpixel(x, y, pic.getpixel(x, y));
@@ -280,8 +198,41 @@ void pixelThread(Picture pic, Picture* newPic, int width, int height, int x, int
         newPic->setpixel(x, y, newColour);
     }
 }
+Picture rowBlur(Picture pic, Picture newPic, int width, int height) {
+    std::thread workers[height];
+    for (int y = 0; y < height; y++) {
+        workers[y] = std::thread(rowThread, pic, &newPic, width, height, y);
+    }
+    for (int y = 0; y < height; y++) {
+        workers[y].join();
+    }
+    return newPic;
+}
 
-
+Picture colBlur(Picture pic, Picture newPic, int width, int height) {
+    std::thread workers[width];
+    for (int x = 0; x < width; x++) {
+        workers[x] = std::thread(colThread, pic, &newPic, width, height, x);
+    }
+    for (int x = 0; x < width; x++) {
+        workers[x].join();
+    }
+    return newPic;
+}
+Picture sectorsBlur(Picture pic, Picture newPic, int width, int height, int sector) {
+    std::thread workers[sector*sector];
+    int counter = 0;
+    for (int x = 0; x < width; x += width/sector) {
+        for (int y = 0; y < height; y += height/sector) {
+            workers[counter] = std::thread(sectorThread, pic, &newPic, width, height, x, y, sector);
+            counter++;
+        }
+    }
+    for (int i = 0; i < counter; i++) {
+        workers[i].join();
+    }
+    return newPic;
+}
 Picture pixelBlur(Picture pic, Picture newPic, int width, int height) {
     std::thread workers[1000];
     int threadCounter = 0;
@@ -290,26 +241,18 @@ Picture pixelBlur(Picture pic, Picture newPic, int width, int height) {
             workers[threadCounter] = std::thread(pixelThread, pic, &newPic, width, height, x, y);
             threadCounter++;
             if (threadCounter == 1000) {
-                for (int i = 0; i < 1000; ++i) {
+                for (int i = 0; i < 1000; i++) {
                     workers[i].join();
                 }
                 threadCounter = 0;
             }
-
         }
-
     }
-    for (int i = 0; i < threadCounter; ++i) {
+    for (int i = 0; i < threadCounter; i++) {
         workers[i].join();
     }
     return newPic;
 }
-
-
-
-
-
-
 void PicLibrary::blur(string filename) {
     Picture pic = this->internalPicStorage[filename];
     int width  = pic.getwidth();
@@ -317,6 +260,8 @@ void PicLibrary::blur(string filename) {
     Picture newPic = Picture(width, height);
     using namespace std::chrono;
     high_resolution_clock::time_point t1 = high_resolution_clock::now();
+
+////original blur
 //    for (int x = 0; x < width; x++) {
 //        for (int y = 0; y < height; y++) {
 //            if (x == 0 || x == width - 1 || y == 0 || y == height - 1) {
@@ -338,15 +283,96 @@ void PicLibrary::blur(string filename) {
 //            }
 //        }
 //    }
-    newPic = colBlur(pic, newPic, width, height);
 
-//    newPic = sectorsBlur(pic, newPic, width, height, 4);
+    high_resolution_clock::time_point tq = high_resolution_clock::now();
+    for (int i = 0; i < 10; i++) {
+
+    //original blur
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                if (x == 0 || x == width - 1 || y == 0 || y == height - 1) {
+                    newPic.setpixel(x, y, pic.getpixel(x, y));
+                } else {
+                    int red = 0;
+                    int green = 0;
+                    int blue = 0;
+                    for (int i = x - 1; i < x + 2; i++) {
+                        for (int j = y - 1; j < y + 2; j++) {
+                            Colour currentPix = pic.getpixel(i, j);
+                            blue = blue + currentPix.getblue();
+                            green = green + currentPix.getgreen();
+                            red = red + currentPix.getred();
+                        }
+                    }
+                    Colour newColour = Colour(red / 9, green / 9, blue / 9);
+                    newPic.setpixel(x, y, newColour);
+                }
+            }
+        }
+    }
+//    high_resolution_clock::time_point tw = high_resolution_clock::now();
+//    int duration = duration_cast<milliseconds>(tw - tq).count();
+//    std::cout << "original blur method takes " << duration << " milliseconds." << std::endl;
+//
+//    high_resolution_clock::time_point tr = high_resolution_clock::now();
+//    for (int i = 0; i < 10; i++) {
+//
+//        newPic = rowBlur(pic, newPic, width, height);
+//
+//    }
+//    high_resolution_clock::time_point te = high_resolution_clock::now();
+//    int duration = duration_cast<milliseconds>(te - tr).count();
+//    std::cout << "row blur method takes " << duration << " milliseconds." << std::endl;
+//    high_resolution_clock::time_point ts = high_resolution_clock::now();
+//    for (int i = 0; i < 10; i++) {
+//
+//        newPic = colBlur(pic, newPic, width, height);
+//
+//    }
+//    high_resolution_clock::time_point ta = high_resolution_clock::now();
+//    int duration = duration_cast<milliseconds>(ta - ts).count();
+//    std::cout << "column blur method takes " << duration << " milliseconds." << std::endl;
+//    high_resolution_clock::time_point tf = high_resolution_clock::now();
+//    for (int i = 0; i < 10; i++) {
+//
+//        newPic = sectorsBlur(pic, newPic, width, height, 2);
+//
+//    }
+//    high_resolution_clock::time_point td = high_resolution_clock::now();
+//    int duration = duration_cast<milliseconds>(td - tf).count();
+//    std::cout << "4 sectors blur method takes " << duration << " milliseconds." << std::endl;
+//    high_resolution_clock::time_point tx = high_resolution_clock::now();
+//    for (int i = 0; i < 10; i++) {
+//
+//        newPic = sectorsBlur(pic, newPic, width, height, 4);
+//
+//    }
+//    high_resolution_clock::time_point tz= high_resolution_clock::now();
+//    int duration = duration_cast<milliseconds>(tz - tx).count();
+//    std::cout << "16 sectors blur method takes " << duration << " milliseconds." << std::endl;
+//    high_resolution_clock::time_point tv = high_resolution_clock::now();
+//    for (int i = 0; i < 10; i++) {
+//
+//        newPic = pixelBlur(pic, newPic, width, height);
+//
+//    }
+//    high_resolution_clock::time_point tc = high_resolution_clock::now();
+//    int duration = duration_cast<milliseconds>(tc - tv).count();
+//    std::cout << "pixel blur method takes " << duration << " milliseconds." << std::endl;
+
+
+
 //    newPic = rowBlur(pic, newPic, width, height);
+//    newPic = colBlur(pic, newPic, width, height);
+//    //divide into 4 sectors
+//    newPic = sectorsBlur(pic, newPic, width, height, 2);
+//    //divide into 16 sectors
+//    newPic = sectorsBlur(pic, newPic, width, height, 4);
+//    newPic = pixelBlur(pic, newPic, width, height);
+
     high_resolution_clock::time_point t2 = high_resolution_clock::now();
-
     int duration = duration_cast<milliseconds>(t2 - t1).count();
-
-    std::cout << "It took me " << duration << " milliseconds.";
+    std::cout << "This blur method takes " << duration << " milliseconds." << std::endl;
     this->internalPicStorage[filename] = newPic;
 }
 

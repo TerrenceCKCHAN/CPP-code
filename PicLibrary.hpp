@@ -4,12 +4,16 @@
 #include "Picture.hpp"
 #include "Utils.hpp"
 #include <map>
+#include <mutex>
+
+using namespace std;
 
 class PicLibrary {
 
+
   private:
-  // TODO: define internal picture storage
   map<string, Picture> internalPicStorage;
+  std::mutex mtx;
 
   public:
   // default class constructor/deconstructor
@@ -19,6 +23,10 @@ class PicLibrary {
 
   //getter
   map<string, Picture> getInternalPicStorage();
+
+  // mutex lock and unlock
+  void lockMutex();
+  void unlockMutex();
 
   // command-line interpreter routines
   void print_picturestore();
