@@ -83,7 +83,7 @@ int main(int argc, char **argv) {
     //create a threadManager that manages all worker threads for each picture loaded
     //create a queueManager for all the tasks to be done by the worker thread for that particular picture
     map <string, thread> threadManager;
-    map <string, queue<vector<string>>*> queueManager;
+    map < string, queue < vector < string >> * > queueManager;
     //load all pictures in the arguments with the file_name being the string after the last "/"
     //e.g. typing the command "./picture_lib images/ducks1.jpg"
     //would load the picture with path images/ducks1.jpg with name ducks1.jpg
@@ -132,6 +132,7 @@ int main(int argc, char **argv) {
             } else {
                 while (queueManager[file_name]->size() > 0) {};
                 threadManager[file_name].detach();
+//                delete queueManager[file_name];
                 queueManager.erase(file_name);
                 threadManager.erase(file_name);
                 picLib->unloadpicture(file_name);
@@ -203,9 +204,9 @@ int main(int argc, char **argv) {
         while (queueManager[item.first]->size() > 0) {};
         item.second.detach();
     }
-    for (auto &item : queueManager) {
-        delete item.second;
-    }
+//    for (auto &item : queueManager) {
+//        delete item.second;
+//    }
     return 0;
 }
 
