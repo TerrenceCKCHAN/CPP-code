@@ -139,6 +139,16 @@ int main(int argc, char **argv) {
                 picLib->unloadpicture(file_name);
             }
         }
+
+        if (tokens[0] == "blur") {
+            string file_name = tokens[1];
+            if (!picLib->getInternalPicStorage().count(file_name)) {
+                cout << "Filename does not exist" << endl;
+            } else {
+                queueManager[file_name]->push(tokens);
+            }
+        }
+
         if (tokens[0] == "save") {
             string file_name = tokens[1];
             string file_path = tokens[2];
@@ -193,14 +203,7 @@ int main(int argc, char **argv) {
                 queueManager[file_name]->push(tokens);
             }
         }
-        if (tokens[0] == "blur") {
-            string file_name = tokens[1];
-            if (!picLib->getInternalPicStorage().count(file_name)) {
-                cout << "Filename does not exist" << endl;
-            } else {
-                queueManager[file_name]->push(tokens);
-            }
-        }
+
         if (line == "exit") {
             break;
             //wait for any outstanding worker threads to complete
