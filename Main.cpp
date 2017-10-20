@@ -206,7 +206,6 @@ int main(int argc, char **argv) {
     for (auto &item : queueManager) {
         delete item.second;
     }
-
     return 0;
 }
 

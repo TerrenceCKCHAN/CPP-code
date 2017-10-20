@@ -276,8 +276,8 @@ void PicLibrary::blur(string filename) {
     int width = pic.getwidth();
     int height = pic.getheight();
     Picture newPic = Picture(width, height);
-    using namespace std::chrono;
-    high_resolution_clock::time_point t1 = high_resolution_clock::now();
+//    using namespace std::chrono;
+//    high_resolution_clock::time_point t1 = high_resolution_clock::now();
     //original blur
     for (int x = 0; x < width; x++) {
         for (int y = 0; y < height; y++) {
@@ -460,9 +460,9 @@ void PicLibrary::blur(string filename) {
     duration = duration_cast<milliseconds>(tc - tv).count();
     std::cout << "pixel blur method takes " << duration << " milliseconds." << std::endl;
 */
-    high_resolution_clock::time_point t2 = high_resolution_clock::now();
-    int duration = duration_cast<milliseconds>(t2 - t1).count();
-    std::cout << "This blur method takes " << duration << " milliseconds." << std::endl;
+//    high_resolution_clock::time_point t2 = high_resolution_clock::now();
+//    int duration = duration_cast<milliseconds>(t2 - t1).count();
+//    std::cout << "This blur method takes " << duration << " milliseconds." << std::endl;
     this->internalPicStorage[filename] = newPic;
 }
 
