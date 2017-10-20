@@ -3,15 +3,18 @@
 #include "Picture.hpp"
 #include <thread>
 
-map<string, Picture> PicLibrary::getInternalPicStorage() {
+map <string, Picture> PicLibrary::getInternalPicStorage() {
     return this->internalPicStorage;
 };
+
 void PicLibrary::lockMutex() {
     this->mtx.lock();
 }
+
 void PicLibrary::unlockMutex() {
     this->mtx.unlock();
 }
+
 void PicLibrary::loadpicture(string path, string filename) {
     lockMutex();
     // To insert into the map -- internalPicStorage<String, Picture>, filename is the key
@@ -19,11 +22,13 @@ void PicLibrary::loadpicture(string path, string filename) {
     this->internalPicStorage[filename] = pic;
     unlockMutex();
 }
+
 void PicLibrary::unloadpicture(string filename) {
     lockMutex();
     this->internalPicStorage.erase(filename);
     unlockMutex();
 }
+
 void PicLibrary::savepicture(string filename, string path) {
     lockMutex();
     Picture pic = this->internalPicStorage[filename];
@@ -31,11 +36,13 @@ void PicLibrary::savepicture(string filename, string path) {
     utils.saveimage(pic.getimage(), path);
     unlockMutex();
 }
+
 void PicLibrary::display(string filename) {
     Picture pic = this->internalPicStorage[filename];
     Utils utils = Utils();
     utils.displayimage(pic.getimage());
 }
+
 // picture transformation routines
 void PicLibrary::invert(string filename) {
     Picture pic = this->internalPicStorage[filename];
@@ -50,6 +57,7 @@ void PicLibrary::invert(string filename) {
         }
     }
 }
+
 void PicLibrary::grayscale(string filename) {
     Picture pic = this->internalPicStorage[filename];
     int width = pic.getwidth();
@@ -64,6 +72,7 @@ void PicLibrary::grayscale(string filename) {
 
     }
 }
+
 void PicLibrary::rotate(string angle, string filename) {
     Picture pic = this->internalPicStorage[filename];
     int width = pic.getwidth();
@@ -97,6 +106,7 @@ void PicLibrary::rotate(string angle, string filename) {
         this->internalPicStorage[filename] = newPic;
     }
 }
+
 void PicLibrary::flipVH(string plane, string filename) {
     Picture pic = this->internalPicStorage[filename];
     int width = pic.getwidth();
@@ -114,7 +124,8 @@ void PicLibrary::flipVH(string plane, string filename) {
     }
     this->internalPicStorage[filename] = newPic;
 }
-void rowThread(Picture pic, Picture* newPic, int width, int height, int y) {
+
+void rowThread(Picture pic, Picture *newPic, int width, int height, int y) {
     for (int x = 0; x < width; x++) {
         if (x == 0 || x == width - 1 || y == 0 || y == height - 1) {
             newPic->setpixel(x, y, pic.getpixel(x, y));
@@ -135,7 +146,8 @@ void rowThread(Picture pic, Picture* newPic, int width, int height, int y) {
         }
     }
 }
-void colThread(Picture pic, Picture* newPic, int width, int height, int x) {
+
+void colThread(Picture pic, Picture *newPic, int width, int height, int x) {
     for (int y = 0; y < height; y++) {
         if (x == 0 || x == width - 1 || y == 0 || y == height - 1) {
             newPic->setpixel(x, y, pic.getpixel(x, y));
@@ -156,9 +168,10 @@ void colThread(Picture pic, Picture* newPic, int width, int height, int x) {
         }
     }
 }
-void sectorThread(Picture pic, Picture* newPic, int width, int height, int a, int b, int sector) {
-    for (int x = a; x < a + width/sector; x++) {
-        for (int y = b; y < b + height/sector; y++) {
+
+void sectorThread(Picture pic, Picture *newPic, int width, int height, int a, int b, int sector) {
+    for (int x = a; x < a + width / sector; x++) {
+        for (int y = b; y < b + height / sector; y++) {
             if (x == 0 || x == width - 1 || y == 0 || y == height - 1) {
                 newPic->setpixel(x, y, pic.getpixel(x, y));
             } else {
@@ -179,7 +192,8 @@ void sectorThread(Picture pic, Picture* newPic, int width, int height, int a, in
         }
     }
 }
-void pixelThread(Picture pic, Picture* newPic, int width, int height, int x, int y) {
+
+void pixelThread(Picture pic, Picture *newPic, int width, int height, int x, int y) {
     if (x == 0 || x == width - 1 || y == 0 || y == height - 1) {
         newPic->setpixel(x, y, pic.getpixel(x, y));
     } else {
@@ -198,6 +212,7 @@ void pixelThread(Picture pic, Picture* newPic, int width, int height, int x, int
         newPic->setpixel(x, y, newColour);
     }
 }
+
 Picture rowBlur(Picture pic, Picture newPic, int width, int height) {
     std::thread workers[height];
     for (int y = 0; y < height; y++) {
@@ -219,11 +234,12 @@ Picture colBlur(Picture pic, Picture newPic, int width, int height) {
     }
     return newPic;
 }
+
 Picture sectorsBlur(Picture pic, Picture newPic, int width, int height, int sector) {
-    std::thread workers[sector*sector];
+    std::thread workers[sector * sector];
     int counter = 0;
-    for (int x = 0; x < width; x += width/sector) {
-        for (int y = 0; y < height; y += height/sector) {
+    for (int x = 0; x < width; x += width / sector) {
+        for (int y = 0; y < height; y += height / sector) {
             workers[counter] = std::thread(sectorThread, pic, &newPic, width, height, x, y, sector);
             counter++;
         }
@@ -233,6 +249,7 @@ Picture sectorsBlur(Picture pic, Picture newPic, int width, int height, int sect
     }
     return newPic;
 }
+
 Picture pixelBlur(Picture pic, Picture newPic, int width, int height) {
     std::thread workers[1000];
     int threadCounter = 0;
@@ -253,9 +270,10 @@ Picture pixelBlur(Picture pic, Picture newPic, int width, int height) {
     }
     return newPic;
 }
+
 void PicLibrary::blur(string filename) {
     Picture pic = this->internalPicStorage[filename];
-    int width  = pic.getwidth();
+    int width = pic.getwidth();
     int height = pic.getheight();
     Picture newPic = Picture(width, height);
     using namespace std::chrono;

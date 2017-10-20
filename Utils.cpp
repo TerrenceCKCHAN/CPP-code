@@ -1,37 +1,34 @@
 #include "Utils.hpp"
 
 
-Utils::Utils(){}
+Utils::Utils() {}
 
-Mat Utils::createimage(int width, int height)
-{   
+Mat Utils::createimage(int width, int height) {
     Mat img;
     try {
-        cout <<"creating colour image" << endl;
+        cout << "creating colour image" << endl;
         img.create(height, width, CV_8UC3);
-    } catch (runtime_error& ex) {
+    } catch (runtime_error &ex) {
         fprintf(stderr, "Exception creating color image: %s\n", ex.what());
         return 1;
     }
-    
-    return img;
-}   
 
-Mat Utils::copyimage(Mat img)
-{
+    return img;
+}
+
+Mat Utils::copyimage(Mat img) {
     return img.clone();
 }
 
-int Utils::saveimage(Mat img, string filename)
-{
+int Utils::saveimage(Mat img, string filename) {
     vector<int> compression_params;
-    
+
     compression_params.push_back(CV_IMWRITE_JPEG_QUALITY);
     compression_params.push_back(95); //default value in opencv
-    
-    try{
+
+    try {
         imwrite(filename, img, compression_params);
-    }catch (runtime_error& ex) {
+    } catch (runtime_error &ex) {
         fprintf(stderr, "Exception converting image to JPEG format: %s\n", ex.what());
         return 1;
     }
@@ -39,17 +36,16 @@ int Utils::saveimage(Mat img, string filename)
     return 0;
 }
 
-Mat Utils::loadimage(string path)
-{
+Mat Utils::loadimage(string path) {
     Mat img;
-    try{
+    try {
         img = imread(path, CV_LOAD_IMAGE_COLOR);
-            
-        if(!img.data){
-            cout <<"Could not load the image" << endl;
+
+        if (!img.data) {
+            cout << "Could not load the image" << endl;
         }
-      
-    }catch (runtime_error& ex) {        
+
+    } catch (runtime_error &ex) {
         fprintf(stderr, " %s\n", ex.what());
         return 1;
     }
@@ -57,10 +53,9 @@ Mat Utils::loadimage(string path)
     return img;
 }
 
-void Utils::displayimage(Mat img)
-{
+void Utils::displayimage(Mat img) {
     namedWindow("Picture processing", WINDOW_AUTOSIZE);
-    imshow("Picture processing",img);
+    imshow("Picture processing", img);
     waitKey(0);
 }
 

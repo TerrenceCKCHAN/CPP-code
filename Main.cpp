@@ -15,7 +15,7 @@
 
 using namespace std;
 
-std::vector<std::string> splitLine(std::string line) {
+std::vector <std::string> splitLine(std::string line) {
     std::vector <std::string> tokens;
     std::stringstream ss(line);
     std::string token;
@@ -24,6 +24,7 @@ std::vector<std::string> splitLine(std::string line) {
     }
     return tokens;
 }
+
 string getFileExt(const string &s) {
 
     size_t i = s.rfind('.', s.length());
@@ -36,10 +37,14 @@ string getFileExt(const string &s) {
 
 //A new worker created when there is a new picture loaded.
 //It is then killed when the picture unloads.
-void worker(queue<vector<string>>* tasks, PicLibrary *picLib) {
+void worker(queue <vector<string>> *tasks, PicLibrary *picLib) {
     while (true) {
         if (tasks->size() > 0) {
             vector <string> tokens = tasks->front();
+            if (tokens[0] == "blur") {
+                string file_name = tokens[1];
+                picLib->blur(file_name);
+            }
             if (tokens[0] == "save") {
                 string file_name = tokens[1];
                 string file_path = tokens[2];
@@ -67,10 +72,6 @@ void worker(queue<vector<string>>* tasks, PicLibrary *picLib) {
                 string file_name = tokens[2];
                 picLib->flipVH(plane, file_name);
             }
-            if (tokens[0] == "blur") {
-                string file_name = tokens[1];
-                picLib->blur(file_name);
-            }
             tasks->pop();
         }
     }
@@ -81,8 +82,8 @@ int main(int argc, char **argv) {
     PicLibrary *picLib = new PicLibrary();
     //create a threadManager that manages all worker threads for each picture loaded
     //create a queueManager for all the tasks to be done by the worker thread for that particular picture
-    map<string, thread> threadManager;
-    map<string, queue<vector<string>>*> queueManager;
+    map <string, thread> threadManager;
+    map < string, queue < vector < string >> * > queueManager;
     //load all pictures in the arguments with the file_name being the string after the last "/"
     //e.g. typing the command "./picture_lib images/ducks1.jpg"
     //would load the picture with path images/ducks1.jpg with name ducks1.jpg
@@ -92,7 +93,7 @@ int main(int argc, char **argv) {
             int position = token.find_last_of("/");
             string file_name = token.substr(position + 1);
             picLib->loadpicture(token, file_name);
-            queue<vector<string>>* myQueue = new std::queue<std::vector<std::string>>();
+            queue <vector<string>> *myQueue = new std::queue <std::vector<std::string>>();
             queueManager[file_name] = myQueue;
             threadManager[file_name] = std::thread(worker, myQueue, picLib);
         }
@@ -120,7 +121,7 @@ int main(int argc, char **argv) {
                 cout << "Cannot load argument" << endl;
             } else {
                 picLib->loadpicture(file_path, file_name);
-                queue<vector<string>>* myQueue = new std::queue<std::vector<std::string>>();
+                queue <vector<string>> *myQueue = new std::queue <std::vector<std::string>>();
                 queueManager[file_name] = myQueue;
                 threadManager[file_name] = std::thread(worker, myQueue, picLib);
             }
