@@ -300,6 +300,7 @@ void PicLibrary::blur(string filename) {
             }
         }
     }
+
 //    high_resolution_clock::time_point t2 = high_resolution_clock::now();
 //    int duration = duration_cast<milliseconds>(t2 - t1).count();
 //    std::cout << "This blur method takes " << duration << " milliseconds." << std::endl;
