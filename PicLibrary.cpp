@@ -30,11 +30,11 @@ void PicLibrary::unloadpicture(string filename) {
 }
 
 void PicLibrary::savepicture(string filename, string path) {
-    lockMutex();
+    //lockMutex();
     Picture pic = this->internalPicStorage[filename];
     Utils utils = Utils();
     utils.saveimage(pic.getimage(), path);
-    unlockMutex();
+    //unlockMutex();
 }
 
 void PicLibrary::display(string filename) {
